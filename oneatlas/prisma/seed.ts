@@ -1,8 +1,9 @@
 import { PrismaClient } from "../src/generated/prisma"
 import { PrismaPg } from "@prisma/adapter-pg"
+import "dotenv/config"
 
 const adapter = new PrismaPg({
-  connectionString: "postgresql://neondb_owner:npg_vIRlkhB4N8tM@ep-wild-silence-ap16dnbu.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require",
+  connectionString: process.env.DATABASE_URL!,
 })
 
 const prisma = new PrismaClient({ adapter })
