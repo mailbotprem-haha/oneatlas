@@ -1,14 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
-import { PrismaClient } from "@/generated/prisma"
-import { PrismaPg } from "@prisma/adapter-pg"
+import { prisma } from "@/lib/prisma"
 import { matchTemplate } from "@/services/matcher"
 import { z } from "zod"
-
-const adapter = new PrismaPg({
-  connectionString: "postgresql://neondb_owner:npg_vIRlkhB4N8tM@ep-wild-silence-ap16dnbu.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require",
-})
-
-const prisma = new PrismaClient({ adapter })
 
 const schema = z.object({
   prompt: z.string().min(3),
