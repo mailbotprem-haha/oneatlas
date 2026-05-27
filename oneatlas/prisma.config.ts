@@ -2,8 +2,7 @@ import { defineConfig } from "prisma/config"
 
 export default defineConfig({
   datasource: {
-    url: process.env.DATABASE_URL!,
-    directUrl: process.env.DATABASE_URL_DIRECT!,
+    url: process.env.DATABASE_URL_DIRECT!,
   },
   migrations: {
     seed: "node --import tsx/esm prisma/seed.ts",
