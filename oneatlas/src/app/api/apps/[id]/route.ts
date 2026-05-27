@@ -1,32 +1,36 @@
 import { NextRequest, NextResponse } from "next/server"
-import { PrismaClient } from "@/generated/prisma"
-import { PrismaPg } from "@prisma/adapter-pg"
-
-const adapter = new PrismaPg({
-  connectionString: "postgresql://neondb_owner:npg_vIRlkhB4N8tM@ep-wild-silence-ap16dnbu.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require",
-})
-const prisma = new PrismaClient({ adapter })
+import { prisma } from "@/lib/prisma"
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params
+    const { id } = await context.params
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Missing app id" },
+        { status: 400 }
+      )
+    }
 
     const app = await prisma.app.findUnique({
       where: { id },
       include: {
-        template: true,
         schemas: {
-          where: { isCurrent: true },
+          where: {
+            isCurrent: true,
+          },
+          take: 1,
         },
+        template: true,
       },
     })
 
     if (!app) {
       return NextResponse.json(
-        { error: { code: "NOT_FOUND", message: "App not found" } },
+        { error: "App not found" },
         { status: 404 }
       )
     }
@@ -37,15 +41,21 @@ export async function GET(
       data: {
         id: app.id,
         name: app.name,
-        schema: currentSchema.schema,
-        version: currentSchema.version,
-        templateUsed: app.template.name,
+        schema: currentSchema?.schema || null,
+        version: currentSchema?.version || null,
+        templateUsed: app.template?.name || null,
       },
     })
   } catch (err) {
     console.error(err)
+
     return NextResponse.json(
-      { error: { code: "SERVER_ERROR", message: "Something went wrong" } },
+      {
+        error: {
+          code: "SERVER_ERROR",
+          message: "Something went wrong",
+        },
+      },
       { status: 500 }
     )
   }
