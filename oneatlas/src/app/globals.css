@@ -1,0 +1,328 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ─── Light / Default (always white, no dark mode) ─── */
+:root,
+.dark {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.18 0.02 250);
+
+  --card: oklch(0.99 0.006 240);
+  --card-foreground: oklch(0.18 0.02 250);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.02 250);
+
+  /* Indigo-blue primary for buttons */
+  --primary: oklch(0.55 0.2 264);
+  --primary-foreground: oklch(1 0 0);
+
+  --secondary: oklch(0.96 0.012 240);
+  --secondary-foreground: oklch(0.25 0.02 250);
+
+  --muted: oklch(0.96 0.01 240);
+  --muted-foreground: oklch(0.48 0.015 250);
+
+  --accent: oklch(0.93 0.04 260);
+  --accent-foreground: oklch(0.35 0.12 264);
+
+  --destructive: oklch(0.58 0.22 27);
+
+  --border: oklch(0.9 0.01 240);
+  --input: oklch(0.93 0.008 240);
+  --ring: oklch(0.6 0.15 264);
+
+  /* Charts — colorful */
+  --chart-1: oklch(0.6 0.2 264);
+  --chart-2: oklch(0.65 0.18 190);
+  --chart-3: oklch(0.65 0.17 145);
+  --chart-4: oklch(0.7 0.17 60);
+  --chart-5: oklch(0.65 0.2 20);
+
+  --radius: 0.75rem;
+
+  --sidebar: oklch(0.97 0.008 240);
+  --sidebar-foreground: oklch(0.18 0.02 250);
+  --sidebar-primary: oklch(0.55 0.2 264);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.93 0.04 260);
+  --sidebar-accent-foreground: oklch(0.35 0.12 264);
+  --sidebar-border: oklch(0.9 0.01 240);
+  --sidebar-ring: oklch(0.6 0.15 264);
+}
+
+/* ─── Mobile overrides ─── */
+@media (max-width: 640px) {
+  :root,
+  .dark {
+    --background: oklch(0.985 0.006 240);
+    --card: oklch(1 0 0);
+    --popover: oklch(1 0 0);
+    --border: oklch(0.87 0.012 240);
+    --input: oklch(0.9 0.01 240);
+    --secondary: oklch(0.95 0.014 240);
+    --muted: oklch(0.95 0.014 240);
+    --sidebar: oklch(1 0 0);
+    --sidebar-border: oklch(0.87 0.012 240);
+    --radius: 0.875rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    /* Smooth transitions on interactive elements */
+    transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html {
+    @apply font-sans;
+    /* Smooth scrolling */
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    /* Prevent layout shift on scrollbar appear */
+    overflow-y: scroll;
+  }
+
+  /* ─── Smooth scrollbar (webkit) ─── */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: oklch(0.96 0.008 240);
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.78 0.04 240);
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.65 0.08 264);
+  }
+
+  /* ─── Button base — colorful, animated ─── */
+  button,
+  [role="button"] {
+    cursor: pointer;
+    transition: background-color 150ms ease, color 150ms ease,
+                transform 100ms ease, box-shadow 150ms ease,
+                border-color 150ms ease;
+  }
+
+  button:active,
+  [role="button"]:active {
+    transform: scale(0.97);
+  }
+
+  /* Primary button */
+  button[data-variant="default"],
+  .btn-primary {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border-radius: var(--radius-md);
+    padding: 0.5rem 1.25rem;
+    font-weight: 500;
+    box-shadow: 0 1px 3px oklch(0.55 0.2 264 / 25%);
+  }
+
+  button[data-variant="default"]:hover,
+  .btn-primary:hover {
+    background-color: oklch(0.48 0.2 264);
+    box-shadow: 0 4px 12px oklch(0.55 0.2 264 / 30%);
+    transform: translateY(-1px);
+  }
+
+  /* Secondary button */
+  button[data-variant="secondary"],
+  .btn-secondary {
+    background-color: var(--secondary);
+    color: var(--secondary-foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+
+  button[data-variant="secondary"]:hover,
+  .btn-secondary:hover {
+    background-color: oklch(0.93 0.018 240);
+    border-color: oklch(0.78 0.06 264);
+  }
+
+  /* Destructive button */
+  button[data-variant="destructive"],
+  .btn-destructive {
+    background-color: var(--destructive);
+    color: oklch(1 0 0);
+    border-radius: var(--radius-md);
+  }
+
+  button[data-variant="destructive"]:hover,
+  .btn-destructive:hover {
+    background-color: oklch(0.5 0.22 27);
+    box-shadow: 0 4px 12px oklch(0.58 0.22 27 / 28%);
+    transform: translateY(-1px);
+  }
+
+  /* Ghost button */
+  button[data-variant="ghost"],
+  .btn-ghost {
+    background-color: transparent;
+    color: var(--foreground);
+    border-radius: var(--radius-md);
+  }
+
+  button[data-variant="ghost"]:hover,
+  .btn-ghost:hover {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  /* Outline button */
+  button[data-variant="outline"],
+  .btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--border);
+    color: var(--foreground);
+    border-radius: var(--radius-md);
+  }
+
+  button[data-variant="outline"]:hover,
+  .btn-outline:hover {
+    background-color: var(--accent);
+    border-color: var(--primary);
+    color: var(--accent-foreground);
+  }
+
+  /* Focus ring for all buttons */
+  button:focus-visible,
+  [role="button"]:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  /* ─── Input fields ─── */
+  input,
+  textarea,
+  select {
+    background-color: var(--input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--foreground);
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px oklch(0.55 0.2 264 / 15%);
+  }
+
+  /* ─── Cards ─── */
+  .card,
+  [data-slot="card"] {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: box-shadow 200ms ease, transform 200ms ease;
+  }
+
+  .card:hover,
+  [data-slot="card"]:hover {
+    box-shadow: 0 4px 16px oklch(0.55 0.2 264 / 10%);
+  }
+
+  /* ─── Responsive typography ─── */
+  h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); }
+  h2 { font-size: clamp(1.375rem, 3vw, 1.875rem); }
+  h3 { font-size: clamp(1.125rem, 2.5vw, 1.375rem); }
+
+  /* ─── Smooth page transitions ─── */
+  @media (prefers-reduced-motion: no-preference) {
+    * {
+      scroll-behavior: smooth;
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    main,
+    [data-slot="card"],
+    .card {
+      animation: fade-in 220ms cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+  }
+
+  /* ─── Responsive containers ─── */
+  @media (max-width: 640px) {
+    .card,
+    [data-slot="card"] {
+      border-radius: calc(var(--radius) * 1.2);
+    }
+
+    button,
+    [role="button"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+}
