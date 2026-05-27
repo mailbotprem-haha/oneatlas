@@ -35,8 +35,12 @@ export default function BuilderPage() {
   const { id } = useParams();
 
   const [app, setApp] = useState<AppData | null>(null);
-  const [selected, setSelected] = useState<Component | null>(null);
+  const [selected, setSelected] = useState<Component | null>(
+    null
+  );
+
   const [instruction, setInstruction] = useState("");
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -50,10 +54,9 @@ export default function BuilderPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center text-gray-900">
-        <div className="flex items-center gap-3 text-sm text-gray-500">
-          <span className="w-2 h-2 rounded-full bg-[#635BFF] animate-ping" />
-          Loading app...
+      <div className="min-h-screen bg-[#F5F5EE] flex items-center justify-center">
+        <div className="text-[15px] text-[#6B7280]">
+          Loading workspace...
         </div>
       </div>
     );
@@ -61,192 +64,234 @@ export default function BuilderPage() {
 
   if (!app) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center text-gray-500">
-        App not found
+      <div className="min-h-screen bg-[#F5F5EE] flex items-center justify-center">
+        <div className="text-[15px] text-[#6B7280]">
+          App not found
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 flex flex-col overflow-x-hidden">
-      {/* Top Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-6 py-3 border-b border-gray-100 bg-white sticky top-0 z-50">
-        <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-          <span className="text-[#635BFF] font-bold text-sm">
-            OneAtlas
-          </span>
+    <div className="min-h-screen bg-[#F5F5EE] text-[#111111] flex flex-col">
+      {/* Topbar */}
 
-          <span className="text-gray-300 text-sm hidden sm:block">
-            →
-          </span>
+      <header className="sticky top-0 z-50 border-b border-[#E5E7EB] bg-[#F5F5EE]/90 backdrop-blur-sm">
+        <div className="h-[72px] px-5 md:px-8 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <span className="text-[18px] font-semibold tracking-[-0.03em]">
+              OneAtlas
+            </span>
 
-          <span className="text-sm font-medium text-gray-800 break-words">
-            {app.name}
-          </span>
+            <div className="hidden md:block w-px h-5 bg-[#E5E7EB]" />
 
-          <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">
-            v{app.version}
-          </span>
-        </div>
+            <div className="hidden md:flex items-center gap-3">
+              <span className="text-[14px] text-[#6B7280]">
+                {app.name}
+              </span>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-gray-400 break-words">
-            Generated from {app.templateUsed}
-          </span>
+              <span className="px-2 py-1 rounded-full border border-[#E5E7EB] bg-white text-[11px] text-[#9CA3AF]">
+                v{app.version}
+              </span>
+            </div>
+          </div>
 
-          <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs px-3 py-1.5 rounded-lg transition active:scale-95">
-            Share
-          </button>
+          <div className="flex items-center gap-3">
+            <button className="hidden md:flex h-11 px-4 rounded-xl border border-[#E5E7EB] bg-white text-[14px] font-medium text-[#111111] hover:bg-[#FAFAFA] transition">
+              Share
+            </button>
 
-          <button className="bg-[#635BFF] hover:bg-[#4f3fd1] text-white text-xs px-3 py-1.5 rounded-lg transition shadow-sm shadow-indigo-100 active:scale-95">
-            Deploy
-          </button>
-        </div>
-      </div>
-
-      {/* Responsive Layout */}
-      <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
-        {/* Left Sidebar */}
-        <div className="w-full lg:w-56 border-b lg:border-b-0 lg:border-r border-gray-100 bg-gray-50/70 p-4 overflow-y-auto shrink-0">
-          <p className="text-xs text-gray-400 uppercase tracking-wider mb-3 font-medium">
-            Components
-          </p>
-
-          <div className="flex flex-col gap-1">
-            {app.schema.components
-              .sort((a, b) => a.order - b.order)
-              .map((comp) => (
-                <button
-                  key={comp.id}
-                  onClick={() => setSelected(comp)}
-                  className={`text-left px-3 py-2 rounded-lg text-sm transition ${
-                    selected?.id === comp.id
-                      ? "bg-indigo-50 text-[#635BFF] font-medium"
-                      : "text-gray-500 hover:bg-white hover:text-gray-900"
-                  }`}
-                >
-                  <span className="text-xs mr-2 opacity-50">
-                    {comp.type === "table"
-                      ? "⊞"
-                      : comp.type === "chart"
-                      ? "↗"
-                      : comp.type === "card"
-                      ? "◻"
-                      : "≡"}
-                  </span>
-
-                  {comp.name}
-                </button>
-              ))}
+            <button className="h-11 px-5 rounded-xl bg-[#FF6600] hover:bg-[#E65C00] text-white text-[14px] font-semibold transition">
+              Deploy
+            </button>
           </div>
         </div>
+      </header>
+
+      {/* Main Layout */}
+
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left Sidebar */}
+
+        <aside className="hidden lg:flex w-[260px] border-r border-[#E5E7EB] bg-[#F8F8F3] flex-col">
+          <div className="p-6 border-b border-[#E5E7EB]">
+            <p className="text-[11px] uppercase tracking-[0.08em] font-semibold text-[#9CA3AF]">
+              Components
+            </p>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-4">
+            <div className="space-y-1">
+              {app.schema.components
+                .sort((a, b) => a.order - b.order)
+                .map((comp) => (
+                  <button
+                    key={comp.id}
+                    onClick={() => setSelected(comp)}
+                    className={`w-full text-left px-4 py-3 rounded-2xl transition ${
+                      selected?.id === comp.id
+                        ? "bg-white border border-[#E5E7EB]"
+                        : "hover:bg-white/70"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[14px] font-medium text-[#111111]">
+                        {comp.name}
+                      </span>
+
+                      <span className="text-[11px] text-[#9CA3AF] uppercase">
+                        {comp.type}
+                      </span>
+                    </div>
+                  </button>
+                ))}
+            </div>
+          </div>
+        </aside>
 
         {/* Main Canvas */}
-        <div className="flex-1 min-w-0 p-4 sm:p-6 overflow-y-auto bg-white">
-          <h2 className="text-xl font-bold mb-6 text-gray-900">
-            {app.schema.title}
-          </h2>
 
-          <div className="grid grid-cols-1 gap-4">
-            {app.schema.components
-              .sort((a, b) => a.order - b.order)
-              .map((comp) => (
-                <div
-                  key={comp.id}
-                  onClick={() => setSelected(comp)}
-                  className={`bg-white border rounded-xl p-4 sm:p-5 cursor-pointer transition shadow-sm ${
-                    selected?.id === comp.id
-                      ? "border-[#635BFF] ring-4 ring-indigo-50"
-                      : "border-gray-200 hover:border-indigo-200 hover:shadow-md"
-                  }`}
-                >
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                    <span className="font-medium text-sm text-gray-800">
-                      {comp.name}
-                    </span>
+        <main className="flex-1 overflow-y-auto">
+          <div className="max-w-5xl mx-auto px-5 md:px-10 py-10 md:py-14">
+            {/* Title */}
 
-                    <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">
-                      {comp.type}
-                    </span>
+            <div className="mb-12">
+              <p className="text-[12px] uppercase tracking-[0.08em] font-semibold text-[#9CA3AF]">
+                Generated Workspace
+              </p>
+
+              <h1 className="mt-4 text-[40px] md:text-[56px] leading-[0.95] tracking-[-0.04em] font-bold">
+                {app.schema.title}
+              </h1>
+
+              <p className="mt-5 max-w-2xl text-[18px] leading-[1.7] text-[#6B7280]">
+                AI-generated operational interface structured
+                from your prompt and connected data schema.
+              </p>
+            </div>
+
+            {/* Components */}
+
+            <div className="space-y-5">
+              {app.schema.components
+                .sort((a, b) => a.order - b.order)
+                .map((comp) => (
+                  <div
+                    key={comp.id}
+                    onClick={() => setSelected(comp)}
+                    className={`bg-white border rounded-[28px] p-6 md:p-8 cursor-pointer transition ${
+                      selected?.id === comp.id
+                        ? "border-[#FF6600]"
+                        : "border-[#E5E7EB] hover:border-[#D1D5DB]"
+                    }`}
+                  >
+                    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                      <div>
+                        <h3 className="text-[22px] font-semibold text-[#111111]">
+                          {comp.name}
+                        </h3>
+
+                        <p className="mt-2 text-[15px] text-[#6B7280] capitalize">
+                          {comp.type} component
+                        </p>
+                      </div>
+
+                      <div className="px-3 py-1 rounded-full border border-[#E5E7EB] bg-[#FAFAFA] text-[11px] uppercase tracking-[0.08em] text-[#9CA3AF]">
+                        {comp.fields.length} fields
+                      </div>
+                    </div>
+
+                    {/* Fields */}
+
+                    <div className="flex flex-wrap gap-3 mt-8">
+                      {comp.fields.map((field) => (
+                        <div
+                          key={field.name}
+                          className="px-4 py-3 rounded-2xl border border-[#E5E7EB] bg-[#FAFAFA]"
+                        >
+                          <p className="text-[14px] font-medium text-[#111111]">
+                            {field.name}
+                          </p>
+
+                          <p className="mt-1 text-[12px] text-[#9CA3AF]">
+                            {field.type}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
+                ))}
+            </div>
+          </div>
+        </main>
 
-                  <div className="flex flex-wrap gap-2">
-                    {comp.fields.map((f) => (
-                      <span
-                        key={f.name}
-                        className="text-xs bg-gray-50 border border-gray-200 rounded px-2 py-1 text-gray-600"
+        {/* Right Panel */}
+
+        <aside className="hidden xl:flex w-[320px] border-l border-[#E5E7EB] bg-[#FAFAF8] flex-col">
+          <div className="p-6 border-b border-[#E5E7EB]">
+            <p className="text-[11px] uppercase tracking-[0.08em] font-semibold text-[#9CA3AF]">
+              Properties
+            </p>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-6">
+            {selected ? (
+              <>
+                <div className="bg-white border border-[#E5E7EB] rounded-[28px] p-6">
+                  <h3 className="text-[22px] font-semibold text-[#111111]">
+                    {selected.name}
+                  </h3>
+
+                  <p className="mt-2 text-[15px] text-[#6B7280] capitalize">
+                    {selected.type} component
+                  </p>
+
+                  <div className="mt-8 space-y-3">
+                    {selected.fields.map((field) => (
+                      <div
+                        key={field.name}
+                        className="border border-[#E5E7EB] rounded-2xl p-4"
                       >
-                        {f.name}
-                        <span className="text-gray-400 ml-1">
-                          {f.type}
-                        </span>
-                      </span>
+                        <p className="text-[14px] font-medium text-[#111111]">
+                          {field.name}
+                        </p>
+
+                        <p className="mt-1 text-[12px] text-[#9CA3AF]">
+                          {field.type}
+                        </p>
+                      </div>
                     ))}
                   </div>
                 </div>
-              ))}
-          </div>
-        </div>
-
-        {/* Right Sidebar */}
-        <div className="w-full lg:w-64 border-t lg:border-t-0 lg:border-l border-gray-100 bg-gray-50/70 p-4 overflow-y-auto shrink-0">
-          {selected ? (
-            <>
-              <p className="text-xs text-gray-400 uppercase tracking-wider mb-3 font-medium">
-                Properties
-              </p>
-
-              <p className="text-sm font-semibold text-gray-800 mb-1">
-                {selected.name}
-              </p>
-
-              <p className="text-xs text-gray-400 mb-4">
-                Type: {selected.type}
-              </p>
-
-              <p className="text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">
-                Fields
-              </p>
-
-              <div className="flex flex-col gap-2">
-                {selected.fields.map((f) => (
-                  <div
-                    key={f.name}
-                    className="bg-white border border-gray-200 rounded-lg px-3 py-2 shadow-sm"
-                  >
-                    <p className="text-xs font-medium text-gray-800">
-                      {f.name}
-                    </p>
-
-                    <p className="text-xs text-gray-400">
-                      {f.type}
-                    </p>
-                  </div>
-                ))}
+              </>
+            ) : (
+              <div className="text-[14px] text-[#9CA3AF]">
+                Select a component
               </div>
-            </>
-          ) : (
-            <p className="text-xs text-gray-400 mt-4">
-              Select a component to edit
-            </p>
-          )}
-        </div>
+            )}
+          </div>
+        </aside>
       </div>
 
-      {/* Bottom Input */}
-      <div className="border-t border-gray-100 bg-white px-4 sm:px-6 py-4">
-        <div className="flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto">
-          <input
-            type="text"
-            value={instruction}
-            onChange={(e) => setInstruction(e.target.value)}
-            placeholder="Add a priority field to tasks..."
-            className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-[#635BFF] focus:ring-4 focus:ring-indigo-50 transition"
-          />
+      {/* Bottom Prompt */}
 
-          <button className="bg-[#635BFF] hover:bg-[#4f3fd1] text-white text-sm px-4 py-3 rounded-xl transition shadow-sm shadow-indigo-100 active:scale-95 whitespace-nowrap">
-            Send
-          </button>
+      <div className="border-t border-[#E5E7EB] bg-[#F5F5EE]">
+        <div className="max-w-4xl mx-auto px-5 md:px-8 py-5">
+          <div className="bg-white border border-[#E5E7EB] rounded-[28px] p-4 flex flex-col sm:flex-row gap-3">
+            <input
+              type="text"
+              value={instruction}
+              onChange={(e) =>
+                setInstruction(e.target.value)
+              }
+              placeholder="Add priority field to tasks..."
+              className="flex-1 bg-transparent border-none outline-none text-[15px] text-[#111111] placeholder:text-[#9CA3AF] px-2 py-3"
+            />
+
+            <button className="h-12 px-6 rounded-xl bg-[#FF6600] hover:bg-[#E65C00] text-white text-[15px] font-semibold transition whitespace-nowrap">
+              Send
+            </button>
+          </div>
         </div>
       </div>
     </div>
